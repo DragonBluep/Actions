@@ -91,13 +91,22 @@ jobs:
         working-directory: openwrt
         run: |
           cat ./templates/${{ env.TARGET }}_${{ env.SUBTARGET }}_defconfig > .config
-          cat ./templates/packages-default_defconfig >> .config
+
+          if [ -e ./templates/packages-default_defconfig ]; then
+            cat ./templates/packages-default_defconfig >> .config
+          else
+            echo 'The default packages template does not exist'
+          fi
 
       - name: Add extra packages
         if:  ${{ inputs.extra_packages }}
         working-directory: openwrt
         run: |
-          cat ./templates/packages-extra_defconfig >> .config
+          if [ -e ./templates/packages-extra_defconfig ]; then
+            cat ./templates/packages-extra_defconfig >> .config
+          else
+            echo 'The extra packages template does not exist'
+          fi
 
       - name: Show configuration
         working-directory: openwrt
