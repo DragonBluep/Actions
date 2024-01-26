@@ -67,7 +67,7 @@ jobs:
 
     steps:
       - name: Checkout directory
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: ${{ inputs.repository }}
           path: openwrt
@@ -146,28 +146,28 @@ jobs:
 
       - name: Upload logs
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.TARGET }}-${{ env.SUBTARGET }}-logs
           path: "openwrt/logs"
 
       - name: Upload target binaries
         if: inputs.build_type == 'Multi targets'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.TARGET }}_${{ env.SUBTARGET }}
           path: openwrt/bin/targets/${{ env.TARGET }}/${{ env.SUBTARGET }}/${{ env.TARGET }}_${{ env.SUBTARGET }}.tar.xz
 
       - name: Upload target initramfs binaries
         if: inputs.build_type == 'Multi targets'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.TARGET }}_${{ env.SUBTARGET }}-initramfs
           path: openwrt/bin/targets/${{ env.TARGET }}/${{ env.SUBTARGET }}/${{ env.TARGET }}_${{ env.SUBTARGET }}-initramfs.tar.xz
 
       - name: Upload device binaries
         if: inputs.build_type == 'Multi devices'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.TARGET }}_${{ env.SUBTARGET }}
           path: |
