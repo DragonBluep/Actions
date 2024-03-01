@@ -19,7 +19,7 @@ on:
         description: 'OpenWrt Branch'
         required: true
         type: string
-        default: 'exp'
+        default: 'dev'
       target:
         description: 'Target'
         required: true
