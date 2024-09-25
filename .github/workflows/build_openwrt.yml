@@ -24,7 +24,7 @@ on:
         description: 'Target'
         required: true
         type: string
-        default: '\"ath79/generic\",\"ath79/nand\",\"ramips/mt7620\",\"ramips/mt7621\",\"ramips/mt76x8\"'
+        default: '\"ath79/generic\",\"ath79/nand\",\"ipq40xx/generic\",\"ramips/mt7620\",\"ramips/mt7621\",\"ramips/mt76x8\"'
       extra_packages:
         description: 'Include Extra Packages'
         required: true
@@ -144,8 +144,8 @@ jobs:
         if: inputs.build_type == 'Multi targets'
         working-directory: openwrt/bin/targets/${{ env.TARGET }}/${{ env.SUBTARGET }}
         run: |
-          tar -Jcvf  ${{ env.TARGET }}_${{ env.SUBTARGET }}.tar.xz --exclude=packages --exclude=*initramfs*.bin *
-          tar -Jcvf  ${{ env.TARGET }}_${{ env.SUBTARGET }}-initramfs.tar.xz *-initramfs-kernel.bin
+          tar -Jcvf  ${{ env.TARGET }}_${{ env.SUBTARGET }}.tar.xz --exclude=packages --exclude=*initramfs* *
+          tar -Jcvf  ${{ env.TARGET }}_${{ env.SUBTARGET }}-initramfs.tar.xz *initramfs*
 
       - name: Upload logs
         if: failure()
