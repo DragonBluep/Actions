@@ -148,7 +148,6 @@ jobs:
           tar -Jcvf  ${{ env.TARGET }}_${{ env.SUBTARGET }}-initramfs.tar.xz *initramfs*
 
       - name: Upload logs
-        if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.TARGET }}-${{ env.SUBTARGET }}-logs
