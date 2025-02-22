@@ -124,6 +124,10 @@ jobs:
           make defconfig
           ./scripts/diffconfig.sh
 
+      - name: Prepare basic tools
+        working-directory: openwrt
+        run: make tools/tar/compile -j$(nproc) BUILD_LOG=1 || ret=$? .github/workflows/scripts/show_build_failures.sh
+
       - name: Download packages
         working-directory: openwrt
         run: make download -j$(nproc) BUILD_LOG=1 || ret=$? .github/workflows/scripts/show_build_failures.sh
