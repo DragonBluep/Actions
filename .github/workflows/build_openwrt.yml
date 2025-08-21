@@ -148,8 +148,8 @@ jobs:
         if: inputs.build_type == 'Multi targets'
         working-directory: openwrt/bin/targets/${{ env.TARGET }}/${{ env.SUBTARGET }}
         run: |
-          tar -Jcvf  ${{ env.TARGET }}_${{ env.SUBTARGET }}.tar.xz --exclude=packages --exclude=*initramfs* *
-          tar -Jcvf  ${{ env.TARGET }}_${{ env.SUBTARGET }}-initramfs.tar.xz *initramfs*
+          tar -cvf  ${{ env.TARGET }}_${{ env.SUBTARGET }}.tar.xz -I 'xz -9 -e --lzma2=dict=256M' --exclude=packages --exclude=*initramfs* *
+          tar -cvf  ${{ env.TARGET }}_${{ env.SUBTARGET }}-initramfs.tar.xz -I 'xz -9 -e --lzma2=dict=256M' *initramfs*
 
       - name: Upload logs
         uses: actions/upload-artifact@v4
