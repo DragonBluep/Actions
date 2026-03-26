@@ -11,36 +11,46 @@ on:
         - 'Multi targets'
         - 'Multi devices'
       repository:
-        description: 'OpenWrt Repository'
+        description: 'Git Repository'
         required: true
         type: string
         default: 'DragonBluep/owrt'
       branch:
-        description: 'OpenWrt Branch'
+        description: 'Git Branch'
         required: true
         type: string
         default: 'dev'
-      target:
-        description: 'Target'
+      templates_path:
+        description: 'Templates Directory'
         required: true
         type: string
-        default: '\"ath79/generic\",\"ath79/nand\",\"ipq40xx/generic\",\"mediatek/filogic\",\"ramips/mt7620\",\"ramips/mt7621\",\"ramips/mt76x8\"'
+        default: './target/templates/'
 
 permissions:
   contents: read
 
 jobs:
   determine_targets:
-    name: Set targets
+    name: Determine targets
     runs-on: ubuntu-latest
     outputs:
       target: ${{ steps.find_targets.outputs.target }}
 
     steps:
+      - name: Checkout directory
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ inputs.repository }}
+          path: openwrt
+          ref: ${{ inputs.branch }}
+          token: ${{ secrets.OPENWRT_PAT }}
+
       - name: Set targets
+        working-directory: openwrt
         id: find_targets
         run: |
-          JSON='['${{ inputs.target }}']'
+          templates=$(ls -p -Q "${{ inputs.templates_path }}" | grep -v \/ | grep _defconfig)
+          JSON='['$(echo $templates | sed 's/_defconfig//g' | sed 's/_/\//g' | sed 's/ /,/g')']'
 
           echo -e "\n---- targets ----\n"
           echo "$JSON"
@@ -69,7 +79,7 @@ jobs:
           ref: ${{ inputs.branch }}
           token: ${{ secrets.OPENWRT_PAT }}
 
-      - name: Initialization environment
+      - name: Initialize environment variables
         run: |
           TARGET=$(echo ${{ matrix.target }} | cut -d "/" -f 1)
           SUBTARGET=$(echo ${{ matrix.target }} | cut -d "/" -f 2)
