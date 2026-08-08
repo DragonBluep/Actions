@@ -141,7 +141,9 @@ jobs:
         run: |
           tar -cvf ${{ env.TARGET }}_${{ env.SUBTARGET }}.tar.xz -I 'xz -9 -e --lzma2=dict=256M' \
             --exclude=packages --exclude=*initramfs* --exclude=kernel-debug.tar.zst *
-          tar -cvf ${{ env.TARGET }}_${{ env.SUBTARGET }}-initramfs.tar.xz -I 'xz -9 -e --lzma2=dict=256M' *initramfs*
+          if find . -maxdepth 1 -type f -name "*initramfs*" | grep -q .; then
+            tar -cvf ${{ env.TARGET }}_${{ env.SUBTARGET }}-initramfs.tar.xz -I 'xz -9 -e --lzma2=dict=256M' *initramfs*
+          fi
 
       - name: Upload logs
         uses: actions/upload-artifact@v7
@@ -164,6 +166,7 @@ jobs:
         with:
           name: ${{ env.TARGET }}_${{ env.SUBTARGET }}-initramfs
           compression-level: 9
+          if-no-files-found: ignore
           path: openwrt/bin/targets/${{ env.TARGET }}/${{ env.SUBTARGET }}/${{ env.TARGET }}_${{ env.SUBTARGET }}-initramfs.tar.xz
 
       - name: Upload kernel debug files
